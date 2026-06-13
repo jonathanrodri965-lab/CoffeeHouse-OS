@@ -1,0 +1,8 @@
+/* Estilos para simular la navegación por pestañas de la Single Page Application (SPA) */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}

@@ -1,0 +1,25 @@
+# Node dependencies
+node_modules/
+Backend/node_modules/
+
+# Build output
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+.DS_Store
+.env
+*.local
+
+# Firebase service account - keep secret
+Backend/firebase-service-account.json
+
+# VS Code settings
+#   The project source uses .vscode/index.html and .vscode/app.js
+#   so the folder must be included in version control.
+.vscode/*.code-workspace

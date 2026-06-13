@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoffeeHouse OS - Panel Frontend</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: {
+                            50: '#fdfbf7',
+                            100: '#f3ebdf',
+                            200: '#e6d3be',
+                            600: '#96705b',
+                            700: '#7c5843',
+                            800: '#634433',
+                            900: '#473024',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-stone-100 text-stone-800 font-sans min-h-screen flex flex-col">
+
+<div class="bg-coffee-900 text-white px-4 py-3 shadow-md border-b border-coffee-800 flex flex-wrap justify-between items-center gap-2">
+        <div class="flex items-center gap-2">
+            <span class="bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Sistema Activo</span>
+            <h1 class="font-bold text-sm md:text-base">CoffeeHouse OS</h1>
+        </div>
+        <div class="flex flex-wrap gap-1.5" id="simulator-controls">
+            <button id="nav-login" onclick="switchScreen('login')" class="sim-btn bg-amber-500 text-coffee-900 px-3 py-1.5 rounded text-xs font-semibold transition" data-screen="login">1. Login</button>
+            <button id="nav-pos" onclick="switchScreen('pos')" class="sim-btn bg-coffee-800 hover:bg-coffee-700 px-3 py-1.5 rounded text-xs font-semibold transition hidden" data-screen="pos">2. Caja POS</button>
+            <button id="nav-barista" onclick="switchScreen('barista')" class="sim-btn bg-coffee-800 hover:bg-coffee-700 px-3 py-1.5 rounded text-xs font-semibold transition hidden" data-screen="barista">3. Barra Barista <span id="barista-badge" class="bg-amber-500 text-coffee-900 px-1.5 py-0.5 rounded-full font-bold ml-1 text-[10px]">0</span></button>
+            <button id="nav-admin" onclick="switchScreen('admin')" class="sim-btn bg-coffee-800 hover:bg-coffee-700 px-3 py-1.5 rounded text-xs font-semibold transition hidden" data-screen="admin">4. Gerencia <span id="alert-badge" class="bg-red-500 text-white px-1.5 py-0.5 rounded-full font-bold ml-1 text-[10px] hidden">!</span></button>
+            
+            <button id="nav-logout" onclick="logout()" class="bg-red-700 hover:bg-red-800 px-3 py-1.5 rounded text-xs font-bold transition hidden">❌ Salir</button>
+        </div>
+    </div>
+
+        <div id="screen-login" class="tab-content active my-auto mx-auto w-full max-w-md">
+            <div class="bg-white rounded-2xl shadow-xl border border-stone-200 overflow-hidden">
+                <div class="bg-gradient-to-br from-coffee-700 to-coffee-900 p-8 text-center text-white">
+                    <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-8 h-8 text-amber-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold tracking-tight">CoffeeHouse OS</h2>
+                    <p class="text-coffee-100 text-sm mt-1">Portal de Acceso de Empleados</p>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div id="login-feedback" class="hidden p-3 bg-red-50 border-l-4 border-red-500 text-red-700 text-xs font-medium rounded shadow-sm"></div>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1.5">Correo Electrónico:</label>
+                        <input type="email" id="login-email" placeholder="nombre@coffeehouse.co" class="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:ring-2 focus:ring-coffee-600 focus:outline-none transition font-medium text-stone-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1.5">Contraseña de Seguridad:</label>
+                        <input type="password" id="login-password" placeholder="••••••••" class="w-full px-4 py-2.5 rounded-lg border border-stone-300 focus:ring-2 focus:ring-coffee-600 focus:outline-none transition font-medium text-stone-700">
+                    </div>
+                    
+                    <button onclick="processLogin()" class="w-full bg-coffee-700 hover:bg-coffee-800 text-white font-bold py-3 rounded-lg transition shadow-md active:scale-[0.98]">
+                        Autenticar Entrada
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-pos" class="tab-content h-full">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-stone-200 shadow-sm">
+                        <h2 class="text-lg font-bold text-coffee-900">Menú Digital de Venta</h2>
+                        <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full">Sesión: Cajero Turno Mañana</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="products-catalog">
+                        </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-stone-200 shadow-lg flex flex-col h-[550px]">
+                    <div class="p-4 border-b border-stone-100 bg-stone-50 rounded-t-xl">
+                        <h3 class="font-bold text-coffee-900">Orden de Compra Actual</h3>
+                        <p class="text-xs text-stone-500">Agrega productos del catálogo</p>
+                    </div>
+                    
+                    <div class="flex-grow overflow-y-auto p-4 space-y-3" id="cart-items">
+                        <div class="text-center text-stone-400 py-12" id="cart-empty-msg">
+                            <svg class="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                            <p class="text-sm">El carrito está vacío</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4 border-t border-stone-100 bg-stone-50 rounded-b-xl space-y-3">
+                        <div class="space-y-1.5 text-sm text-stone-600">
+                            <div class="flex justify-between">
+                                <span>Subtotal</span>
+                                <span id="cart-subtotal">$0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Impuesto (IVA 19%)</span>
+                                <span id="cart-tax">$0</span>
+                            </div>
+                            <div class="flex justify-between text-base font-bold text-stone-900 border-t border-stone-200 pt-1.5">
+                                <span>TOTAL</span>
+                                <span id="cart-total">$0</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="clearCart()" class="border border-stone-300 hover:bg-stone-100 text-stone-700 py-2.5 rounded-lg text-sm font-semibold transition">Vaciar</button>
+                            <button onclick="checkoutOrder()" class="bg-coffee-700 hover:bg-coffee-800 text-white py-2.5 rounded-lg text-sm font-bold shadow transition">Cobrar y Sincronizar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-barista" class="tab-content">
+            <div class="bg-white p-4 rounded-xl border border-stone-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-6">
+                <div>
+                    <h2 class="text-lg font-bold text-coffee-900">Monitor Técnico de Preparación (Barra)</h2>
+                    <p class="text-xs text-stone-500">Pedidos recibidos automáticamente desde caja en tiempo real</p>
+                </div>
+                <button onclick="simulateLoss()" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition">Registrar Merma Técnico (Derrame)</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="barista-orders-container">
+                </div>
+
+            <div id="barista-empty-msg" class="bg-white rounded-xl border border-dashed border-stone-300 p-12 text-center text-stone-500">
+                <svg class="w-16 h-16 mx-auto text-stone-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                <h3 class="font-bold text-stone-700">Sin órdenes en preparación</h3>
+                <p class="text-sm mt-1">Registra cobros en el Punto de Venta para ver la comanda aparecer aquí.</p>
+            </div>
+        </div>
+
+        <div id="screen-admin" class="tab-content space-y-6">
+            <div id="admin-alerts" class="space-y-3"></div>
+
+            <!-- Panel: Gestión de Usuarios (Gerencia) -->
+            <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm">
+                <div class="flex justify-between items-center border-b border-stone-100 pb-3 mb-3">
+                    <h3 class="font-bold text-coffee-900">Gestión de Usuarios</h3>
+                    <button onclick="openUserModal()" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-3 py-1.5 rounded transition">Nuevo Usuario</button>
+                </div>
+                <div id="users-list" class="space-y-2 text-sm text-stone-700">
+                    <p class="text-xs text-stone-400">Cargando usuarios...</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm space-y-4">
+                    <div class="border-b border-stone-100 pb-3 flex justify-between items-center">
+                        <h3 class="font-bold text-coffee-900">Inventario Central (Homeostasis)</h3>
+                        <button onclick="restockAll()" class="text-xs bg-coffee-100 hover:bg-coffee-200 text-coffee-800 font-bold px-3 py-1.5 rounded transition">Reabastecer Todo</button>
+                    </div>
+                    <div class="space-y-4" id="inventory-list"></div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm space-y-4">
+                    <div class="border-b border-stone-100 pb-3">
+                        <h3 class="font-bold text-coffee-900">Control de Mermas (Barista)</h3>
+                    </div>
+                    <div class="overflow-y-auto max-h-[250px] space-y-3" id="mermas-history"></div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-stone-200 p-5 shadow-sm space-y-4">
+                    <div class="border-b border-stone-100 pb-3 flex justify-between items-center">
+                        <h3 class="font-bold text-coffee-900">Cierre Financiero del Día</h3>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">Automático</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-150">
+                            <span class="text-xs text-stone-500 font-semibold uppercase tracking-wider">Ventas Totales</span>
+                            <p class="text-2xl font-black text-coffee-900 mt-1" id="admin-total-sales">$0</p>
+                        </div>
+                        <div class="bg-stone-50 p-4 rounded-xl border border-stone-150">
+                            <span class="text-xs text-stone-500 font-semibold uppercase tracking-wider">Pedidos Servidos</span>
+                            <p class="text-2xl font-black text-coffee-900 mt-1" id="admin-total-count">0</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <span class="text-xs text-stone-500 font-bold uppercase tracking-wider block">Productos más Vendidos</span>
+                        <div class="space-y-2" id="popular-products"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="export-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-stone-200 space-y-4">
+            <div class="flex items-center gap-3 text-coffee-900 border-b border-stone-100 pb-3">
+                <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <h3 class="text-lg font-black" id="modal-title">Generación de Orden de Compra</h3>
+            </div>
+            <div class="text-sm text-stone-600 space-y-2">
+                <p id="modal-description">Documento autogenerado para optimizar el reabastecimiento.</p>
+                <div class="bg-stone-50 p-3 rounded-lg border font-mono text-xs whitespace-pre-wrap" id="modal-doc-preview"></div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeModal()" class="px-4 py-2 bg-stone-150 hover:bg-stone-200 text-stone-700 rounded-lg text-sm font-bold transition">Cerrar</button>
+                <button onclick="triggerPrintSim()" class="px-4 py-2 bg-coffee-700 hover:bg-coffee-800 text-white rounded-lg text-sm font-bold transition">Descargar / Imprimir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Crear / Editar Usuario -->
+    <div id="user-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-stone-200 space-y-4">
+            <div class="flex items-center gap-3 text-coffee-900 border-b border-stone-100 pb-3">
+                <h3 id="user-modal-title" class="text-lg font-black">Crear Nuevo Usuario</h3>
+            </div>
+            <input id="user-original-email" type="hidden" />
+            <div class="space-y-3">
+                <input id="user-email" type="email" placeholder="correo@dominio" class="w-full px-3 py-2 border rounded" />
+                <input id="user-password" type="password" placeholder="contraseña (dejar vacío si no cambia)" class="w-full px-3 py-2 border rounded" />
+                <input id="user-name" type="text" placeholder="Nombre completo" class="w-full px-3 py-2 border rounded" />
+                <select id="user-role" class="w-full px-3 py-2 border rounded">
+                    <option value="cajero">Cajero</option>
+                    <option value="barista">Barista</option>
+                    <option value="gerente">Gerente</option>
+                </select>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeUserModal()" class="px-4 py-2 bg-stone-150 hover:bg-stone-200 text-stone-700 rounded-lg text-sm font-bold">Cancelar</button>
+                <button id="save-user-button" onclick="saveUser()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-4 right-4 bg-stone-900 text-white px-4 py-3 rounded-xl shadow-2xl z-50 transition-all duration-300 transform translate-y-20 opacity-0 flex items-center gap-2">
+        <span id="toast-text">Mensaje</span>
+    </div>
+
+    <footer class="bg-stone-200 border-t border-stone-300 py-4 text-center text-xs text-stone-600">
+        <p>CoffeeHouse OS v1.0 | Desarrollado por: <strong>Jonathan David Rodriguez Guzman</strong> | ADSO Ficha: <strong>3466017</strong></p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
