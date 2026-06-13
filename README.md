@@ -2,7 +2,7 @@ CoffeeHouse-OS
 
 📱 **Acceso Público (Túnel HTTPS):**
 ```
-https://mi-coffeehouse.loca.lt
+http://127.0.0.1:5000/
 ```
 
 Instrucciones rápidas para desarrollo local:
@@ -39,7 +39,7 @@ http://localhost:5000/
 **Opción B (Público - Túnel HTTPS):**
 Accede a:
 ```
-https://mi-coffeehouse.loca.lt
+(http://127.0.0.1:5000/)
 ```
 (Requiere que el backend y túnel estén corriendo)
 
